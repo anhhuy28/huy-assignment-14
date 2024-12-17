@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Welcome to Chat App</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<div class="welcome-box">
+    <h1>Welcome to Chat App</h1>
+    <div th:if="${user == null}">
+        <form action="/user" method="post">
+            <input type="text" name="username" placeholder="Enter your username" required>
+            <button type="submit">Join</button>
+        </form>
+    </div>
+    <div th:if="${user != null}">
+        <h2>Welcome, <span th:text="${user.username}"></span>!</h2>
+        <h3>Available Channels:</h3>
+        <ul>
+            <li th:each="channel : ${channels}">
+                <a th:href="@{/channels/{id}(id=${channel.id})}" th:text="${channel.name}"></a>
+            </li>
+        </ul>
+    </div>
+</div>
+<svg class="background-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+    <path d="M0,100 C50,0 50,0 100,100 Z" />
+    <path d="M0,100 L100,0 L100,100 Z" />
+    <path d="M50,0 L100,100 L0,100 Z" />
+</svg>
+<script th:src="@{/js/chat.js}"></script>
+</body>
+</html>

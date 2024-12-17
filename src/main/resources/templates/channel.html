@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${channel.name}"></title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<div class="chat-box">
+    <div class="chat-header">
+        <h1 th:text="${channel.name}"></h1>
+    </div>
+    <div id="messages" class="chat-messages"></div>
+    <div class="chat-input-container">
+        <textarea id="message-input" placeholder="Type your message..."></textarea>
+        <button id="send-button">Send</button>
+    </div>
+    <input type="hidden" id="channel-id" th:value="${channel.id}">
+    <input type="hidden" id="user-id" th:value="${user.id}">
+</div>
+<svg class="background-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+    <path d="M0,100 C50,0 50,0 100,100 Z" />
+    <path d="M0,100 L100,0 L100,100 Z" />
+    <path d="M50,0 L100,100 L0,100 Z" />
+</svg>
+<script th:src="@{/js/chat.js}"></script>
+</body>
+</html>
