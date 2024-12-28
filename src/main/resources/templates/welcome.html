@@ -1,26 +1,22 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Welcome to Chat App</title>
+    <title>Hello! What’s your name? Let’s get started!</title>
     <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
 <body>
 <div class="welcome-box">
-    <h1>Welcome to Chat App</h1>
-    <div th:if="${user == null}">
-        <form action="/user" method="post">
-            <input type="text" name="username" placeholder="Enter your username" required>
+    <h1>Hello! What’s your name? Let’s get started!</h1>
+    <div id="login-section">
+        <form id="login-form">
+            <input type="text" id="username" placeholder="Enter your username" required>
             <button type="submit">Join</button>
         </form>
     </div>
-    <div th:if="${user != null}">
-        <h2>Welcome, <span th:text="${user.username}"></span>!</h2>
+    <div id="channel-section" style="display: none;">
+        <h2>Welcome, <span id="username-display"></span>!</h2>
         <h3>Available Channels:</h3>
-        <ul>
-            <li th:each="channel : ${channels}">
-                <a th:href="@{/channels/{id}(id=${channel.id})}" th:text="${channel.name}"></a>
-            </li>
-        </ul>
+        <ul id="channels-list"></ul>
     </div>
 </div>
 <svg class="background-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none">
@@ -28,6 +24,50 @@
     <path d="M0,100 L100,0 L100,100 Z" />
     <path d="M50,0 L100,100 L0,100 Z" />
 </svg>
-<script th:src="@{/js/chat.js}"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const loginForm = document.getElementById('login-form');
+        const loginSection = document.getElementById('login-section');
+        const channelSection = document.getElementById('channel-section');
+        const usernameDisplay = document.getElementById('username-display');
+        const channelsList = document.getElementById('channels-list');
+
+        loginForm.addEventListener('submit', async function (event) {
+            event.preventDefault();
+
+            const username = document.getElementById('username').value;
+
+            const response = await fetch('/user', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: `username=${encodeURIComponent(username)}`,
+            });
+
+            if (response.ok) {
+                const user = await response.json();
+
+                sessionStorage.setItem('userId', user.id);
+                sessionStorage.setItem('username', user.username);
+
+                usernameDisplay.textContent = user.username;
+                loginSection.style.display = 'none';
+                channelSection.style.display = 'block';
+
+                const channelsResponse = await fetch('/channels');
+                if (channelsResponse.ok) {
+                    const channels = await channelsResponse.json();
+                    channelsList.innerHTML = channels
+                        .map(channel => {
+                            const userId = sessionStorage.getItem('userId');
+                            return `<li><a href="/channels/${channel.id}?userId=${userId}">${channel.name}</a></li>`;
+                        })
+                        .join('');
+                }
+            } else {
+                console.error('Failed to create user.');
+            }
+        });
+    });
+</script>
 </body>
 </html>

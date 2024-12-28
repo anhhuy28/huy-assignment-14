@@ -20,6 +20,9 @@ public class UserRepository {
     }
 
     public User findById(Long id) {
+        if (id == null) {
+            return null;
+        }
         return users.get(id);
     }
 
@@ -34,5 +37,3 @@ public class UserRepository {
         users.remove(user.getId());
     }
 }
-
-

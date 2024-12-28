@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class WelcomeController {
@@ -35,11 +36,10 @@ public class WelcomeController {
     }
 
     @PostMapping("/user")
-    public String createUser(@RequestParam String username, HttpSession session) {
+    @ResponseBody
+    public User createUser(@RequestParam String username) {
         User user = new User();
         user.setUsername(username);
-        user = userService.createUser(user);
-        session.setAttribute("userId", user.getId());
-        return "redirect:/";
+        return userService.createUser(user);
     }
 }

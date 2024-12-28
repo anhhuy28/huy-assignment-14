@@ -24,6 +24,9 @@ public class ChannelRepository {
     }
 
     public Channel findById(Long id) {
+        if (id == null) {
+            return null;
+        }
         return channels.get(id);
     }
 

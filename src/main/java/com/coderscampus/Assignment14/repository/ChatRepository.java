@@ -22,6 +22,9 @@ public class ChatRepository {
     }
 
     public List<Chat> findByChannelId(Long channelId) {
+        if (channelId == null) {
+            return List.of(); // Return an empty list if channelId is null
+        }
         return messages.stream()
                 .filter(m -> m.getChannelId().equals(channelId))
                 .collect(Collectors.toList());
